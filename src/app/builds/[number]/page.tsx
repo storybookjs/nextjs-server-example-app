@@ -9,7 +9,6 @@ export default async function Build({
   params: { number: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  console.log('Build');
   return (
     <div>
       <pre>
