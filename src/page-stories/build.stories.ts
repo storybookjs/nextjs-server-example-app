@@ -11,7 +11,7 @@ export const BuildSix = {
       number: 6,
     },
     $mock: {
-      build: {
+      getBuild: {
         number: 6,
         status: 'ACCEPTED',
       },
@@ -26,7 +26,7 @@ export const BuildSevenDesc = {
       sort: 'desc',
     },
     $mock: {
-      build: {
+      getBuild: {
         number: 7,
         status: 'IN_PROGRESS',
       },

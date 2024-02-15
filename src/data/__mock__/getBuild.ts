@@ -1,6 +1,4 @@
-import { Mock } from '../../mock';
-import * as module from '../getBuild';
+import { mockFn } from '../../mock';
+import { getBuild as getBuildOriginal } from '../getBuild';
 
-const { getBuild } = Mock.module(module, { getBuild: () => Mock.get()?.build });
-
-export { getBuild };
+export const getBuild = mockFn(getBuildOriginal, 'getBuild');

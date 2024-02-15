@@ -1,26 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { composeStory } from '@storybook/react';
-
-import * as stories from './page-stories/build.stories';
-
-const map = {
-  'pages-build--build-seven-desc': {
-    csf: stories,
-    key: 'BuildSevenDesc',
-  },
-  'pages-build--build-six': {
-    csf: stories,
-    key: 'BuildSix',
-  },
-};
+import { storyIndex } from './storyIndex';
 
 export function middleware(request: NextRequest) {
   const storyId = request.url.split('/').at(-1);
 
   if (!storyId) throw new Error('no storyId');
-  if (!(storyId in map)) throw new Error(`unknown storyId: '${storyId}`);
+  if (!(storyId in storyIndex)) throw new Error(`unknown storyId: '${storyId}`);
 
-  const data = map[storyId as keyof typeof map];
+  const data = storyIndex[storyId as keyof typeof storyIndex];
 
   const { args } = composeStory(
     // @ts-expect-error fix types
