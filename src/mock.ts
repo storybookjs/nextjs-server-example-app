@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 // @ts-expect-error wrong react version
 import { cache } from 'react';
 import { storyIndex } from './storyIndex';
@@ -24,20 +24,44 @@ const getStoryMockData = cache(() => {
   return args.$mock;
 });
 
-type Exports = Record<string, any>;
+type MockData = { [key: string]: any };
+const lastRequestMockDataPerSession: Record<string, MockData> = {};
 
+const getSessionId = () => {
+  const sessionId = headers().get('__storybookSessionId__');
+  if (!sessionId) throw new Error('Unknown sessionId');
+
+  return sessionId;
+};
+
+export function getLastRequestMockData(): MockData | void {
+  return lastRequestMockDataPerSession[getSessionId()];
+}
+
+const getRequestMockData = cache(() => ({}) as MockData);
+const setSessionMockDataKey = (key: string, data: any) => {
+  const sessionId = getSessionId();
+
+  const requestMockData = getRequestMockData();
+  requestMockData[key] = data;
+  lastRequestMockDataPerSession[sessionId] = requestMockData;
+};
+
+type Exports = Record<string, any>;
 export function mockFn<TFunction extends (...args: any[]) => any>(
   original: TFunction,
   mockKey: string
 ) {
-  return (...args: Parameters<TFunction>) => {
-    const data = getStoryMockData();
+  return async (...args: Parameters<TFunction>) => {
+    const mockData = getStoryMockData();
 
-    if (data[mockKey]) {
-      return data[mockKey];
+    if (mockData?.[mockKey]) {
+      return mockData[mockKey];
     }
 
-    return original(...args);
+    const data = await original(...args);
+    setSessionMockDataKey(mockKey, data);
+    return data;
   };
 }
 

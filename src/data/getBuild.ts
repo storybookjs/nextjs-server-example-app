@@ -1,3 +1,7 @@
-export async function getBuild(id: number) {
-  throw new Error('Do some server stuff');
+export async function getBuild(number: number) {
+  return {
+    number,
+    name: `Build #${number}`,
+    status: 'PASSED',
+  };
 }

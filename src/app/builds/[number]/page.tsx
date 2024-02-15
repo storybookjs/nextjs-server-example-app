@@ -14,7 +14,7 @@ export default async function Build({
     <div>
       <pre>
         Build page, build number: {number}, sort: {sort} Build data:{' '}
-        {JSON.stringify(await getBuild())}
+        {JSON.stringify(await getBuild(number))}
       </pre>
     </div>
   );

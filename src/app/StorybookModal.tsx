@@ -1,7 +1,14 @@
 import Link from 'next/link';
 import { storyIndex } from '../storyIndex';
+import { getLastRequestMockData } from '../mock';
 
 export function StorybookModal({}) {
+  async function saveStory() {
+    'use server';
+
+    console.log(getLastRequestMockData());
+  }
+
   return (
     <div
       style={{
@@ -21,6 +28,13 @@ export function StorybookModal({}) {
             </Link>
           </li>
         ))}
+
+        <li>
+          <form action={saveStory}>
+            Save current route
+            <button type="submit">Go</button>
+          </form>
+        </li>
       </ul>
     </div>
   );
